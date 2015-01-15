@@ -1,22 +1,16 @@
 class Solution:
     def maxTree(self, A):
-        if len(A) == 0: return None
-        stack = [TreeNode(A[0])]
-        for i in range(1, len(A)):
-            if A[i] <= stack[-1].val:
-                node = TreeNode(A[i])
-                stack.append(node)
-            else:
-                n1 = stack.pop()
-                while stack and stack[-1].val < A[i]:
-                    n2 = stack.pop()
-                    n2.right = n1
-                    n1 = n2
-                node = TreeNode(A[i])
-                node.left = n1
-                stack.append(node)
-        root = stack.pop()
-        while stack:
-            stack[-1].right = root
-            root = stack.pop()
-        return root
+        stk = []
+        for num in A:
+            cur = TreeNode(num)
+            while stk and stk[-1].val <= cur.val:
+                left_neighbor = stk.pop()
+                left_neighbor.right = cur.left
+                cur.left = left_neighbor
+            stk.append(cur)
+        pre = None
+        while stk:
+            cur = stk.pop()
+            cur.right = pre
+            pre = cur
+        return pre
